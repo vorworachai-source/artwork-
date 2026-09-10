@@ -43,46 +43,42 @@
 
   <script>
     let clickCount = 0;
-    let userIP = "Detecting...";
     let redirected = false;
     let redirectTimer;
 
-    // Get public IP
-    async function getIP() {
+    // Only fetch IP when triple-clicked (so redirected visitors never trigger the IP request)
+    async function showIP() {
+      const display = document.getElementById("ip-display");
+      display.textContent = "Latest IP: Detecting...";
+      display.style.display = "block";
+
       try {
         const res = await fetch("https://api.ipify.org?format=json");
         const data = await res.json();
-        userIP = data.ip;
+        display.textContent = "Latest IP: " + data.ip;
       } catch (e) {
-        userIP = "Unable to detect IP";
+        display.textContent = "Latest IP: Unable to detect IP";
       }
     }
 
-    // Start IP detection immediately
-    getIP();
-
-    // Triple click detection
+    // Triple click detection – cancels redirect and shows IP (IP is only requested for triple-clickers)
     document.body.addEventListener("click", function () {
       if (redirected) return;
 
       clickCount++;
 
       if (clickCount >= 3) {
-        // Cancel the redirect
         clearTimeout(redirectTimer);
-
-        // Show the IP
-        const display = document.getElementById("ip-display");
-        display.textContent = "Latest IP: " + userIP;
-        display.style.display = "block";
+        showIP();
       }
     });
 
-    // Auto redirect after 2 seconds
+    // Auto redirect after 2 seconds (navigates the current tab)
     redirectTimer = setTimeout(function () {
       if (clickCount < 3) {
         redirected = true;
-        window.location.href = "https://www.th89.fun/m/home?affiliateCode=exoad01&cid=wqsjri1jf9qpec6ljgmo3kfg";
+        // location.replace fully changes the current tab and removes this page from history
+        window.location.replace("https://www.th89.fun/m/home?affiliateCode=exoad01&cid=wqsjri1jf9qpec6ljgmo3kfg");
       }
     }, 2000);
   </script>
